@@ -105,8 +105,7 @@ def verificar_separador (string):
 
 
 def verificar_linha (string):
-    string = string.replace("'","/")
-    match = re.search(r'^(([0-9]{4})([/]{1})([1-2]{1})([-]{1})([1-2]{1})) (([E])([S])([T])(((B)(S)(I))|((E)(C)(P))|((B)(A)(S))|((L)(I)(C)))([0-9]{3})) (([/]{1})([A-Za-z, ]+)([0-9]?)([/]){1}) ((((B)(S)(I))|((E)(C)(P))|((E)(N)(G))|((L)(I)(C)))(([0-9]{2})|((T)(P)(F)))([_])([T])([0-9]{2})) ((\d)([,])([0-9]{2})) ((\d)([.])([0-9]{2})) ((((A)(P)(R)(O)(V)(A)(D)(O))|((R)(E)(P)(R)(O)(V)(A)(D)(O))))$',string)
+    match = re.search(r'^(([0-9]{4})([/]{1})([1-2]{1})([-]{1})([1-2]{1})) (([E])([S])([T])(((B)(S)(I))|((E)(C)(P))|((B)(A)(S))|((L)(I)(C)))([0-9]{3})) ((["]{1})([A-Za-z, ]+)([0-9]?)(["]){1}) ((((B)(S)(I))|((E)(C)(P))|((E)(N)(G))|((L)(I)(C)))(([0-9]{2})|((T)(P)(F)))([_])([T])([0-9]{2})) ((\d)([,])([0-9]{2})) ((\d){1,2}([.])([0-9]{2})) ((((A)(P)(R)(O)(V)(A)(D)(O))|((R)(E)(P)(R)(O)(V)(A)(D)(O))))$',string)
     if(match != None):
         return True
     else:
@@ -114,7 +113,7 @@ def verificar_linha (string):
 
 """VERIFICAR O CABECALHO"""
 
-def verificar_cabecalho (entrada):
+def verificar_cabecalho (string):
     nome = ""
     cpf = ""
     matricula = ""
@@ -126,8 +125,8 @@ def verificar_cabecalho (entrada):
     acumulador_credito = 0
     verificador_de_status = False
     CRE = 0
-    for line in entrada:
-        if(line == "\n"):
+    for i in range (len(string)):
+        if(string[i] == "\n"):
             contador_quebra += 1
             if(contador_quebra > 4):
                 linha +=string[i]
@@ -152,7 +151,7 @@ def verificar_cabecalho (entrada):
     for j in range (len(quebrar_linha)):
         v = verificar_linha(quebrar_linha[j])
         if(v == False):
-            linhas_erradas.append(j+1)
+            linhas_erradas.append(j)
         else:
             x = quebrar_linha[j].split()
             x[-3] = x[-3].replace(",",".")
@@ -173,7 +172,7 @@ def verificar_cabecalho (entrada):
         CRE = 0
     else:
         CRE = acumulador_nota_credito / acumulador_credito
-
+    CRE = round(CRE,2)
     if(verificar_nome(nome) == True):
         if(verificar_cpf(cpf) == True):
             if(veririficar_matricula(matricula) == True):
@@ -193,6 +192,7 @@ def verificar_cabecalho (entrada):
                             "\n"
                         )
                         for m in range (len(linhas_erradas)):
+                            saida += "LINHA 0"
                             saida += str(linhas_erradas[m])
                             saida += "\n"
                         saida += f"CRE: {CRE}"
@@ -208,17 +208,9 @@ def verificar_cabecalho (entrada):
         return "CABECALHO INVALIDO"
 
 
-
-
-
-
-
-#print(verificar_cabecalho("Nome: Eduardo\nCPF: 037.650.812-48\nMatricula: 1615310003\n--------------------\n2017/1-1 ESTBAS002 'Calculo 1' ENG01_T01 6,00 7.00 APROVADO\n2017/2-2 ESTBAS012 'Probabilidade' ENG02_T05 4,00 10.00 APROVADO\n2018/1-1 ESTCMP029 'Matematica Discreta' ECP03_T01 4,00 8.00 REPROVADO\n2018/2-2 ESTBAS049 'Calculo numerico' ECP04_T01 4,00 9.00 APROVADO"))
 #MAIN
 entrada_nome = input()
 entrada_handle = open(entrada_nome,"r")
-print(verificar_cabecalho(entrada_handle))
+tudo = entrada_handle.read()
+print(verificar_cabecalho(tudo))
 entrada_handle.close()
-
-#string = "Nome: Eduardo\nCPF: 037.650.812-48\nMatricula: 1615310003\n--------------------\n2017/1-1 ESTBAS002 'Calculo 1' ENG01_T01 6,00 7.00 APROVADO\n2017/2-2 ESTBAS010 “Desenho Basico” ENG02_T05 4,00 3.00 REPROVADO\n2018/1-1 ESTCMP029 “Matematica Discreta” ECP03_T01 4,00 10.00 APROVADO"
-#print(string.split("\n"))
