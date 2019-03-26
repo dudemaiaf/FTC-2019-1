@@ -193,19 +193,19 @@ def verificar_cabecalho (string):
                         )
                         for m in range (len(linhas_erradas)):
                             saida += "LINHA 0"
-                            saida += str(linhas_erradas[m])
+                            saida += str(quebrar_linha[linhas_erradas[m]])
                             saida += "\n"
                         saida += f"CRE: {CRE}"
 
                         return saida
                 else:
-                    return "CABECALHO INVALIDO"
+                    return "SEPARADOR INVALIDO"
             else:
-                return "CABECALHO INVALIDO"
+                return "MATRICULA INVALIDO"
         else:
-            return "CABECALHO INVALIDO"
+            return "CPF INVALIDO"
     else:
-        return "CABECALHO INVALIDO"
+        return "NOME INVALIDO"
 
 
 #MAIN
